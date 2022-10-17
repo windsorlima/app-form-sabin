@@ -1,14 +1,9 @@
-import { useCallback, useState } from "react";
-import { BaseButton } from "../BaseButton";
+import { useCallback } from "react";
+import { arrayOptions } from "../../constants/requestOptions";
 import { RequestOption } from "../RequestOption";
-import { ButtonRow, Container, Title } from "./styles";
+import { Container, Title } from "./styles";
 
 export const RequestOptions = ({ selectedOption, setSelectedOption }) => {
-  const options = [
-    { label: "Justificativa de faltas", value: "fauls_justification" },
-    { label: "Informar algo", value: "info_something" },
-  ];
-
   const selectOption = useCallback(
     (option) => {
       if (selectedOption === option) {
@@ -23,7 +18,7 @@ export const RequestOptions = ({ selectedOption, setSelectedOption }) => {
   return (
     <Container>
       <Title>Selecione uma solicitação:</Title>
-      {options.map((option) => (
+      {arrayOptions.map((option) => (
         <RequestOption
           name={option.label}
           isSelected={selectedOption === option.value}

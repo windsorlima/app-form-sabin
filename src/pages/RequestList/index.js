@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/BackButton";
 import { NextButton } from "../../components/NextButton";
 import { RequestOptions } from "../../components/RequestOptions";
@@ -6,10 +7,15 @@ import { useControlApp } from "../../hooks/app";
 import { ButtonRow, Container, StudentInfo } from "./styles";
 
 export const RequestList = () => {
-  const { appData } = useControlApp();
+  const { appData, setAppData } = useControlApp();
   const [selectedOption, setSelectedOption] = useState("");
+  let navigate = useNavigate();
 
   const { selectedStudent } = appData;
+
+  const setRequest = useCallback(() => {
+    setAppData({ ...appData, selectedSolicitation: selectedOption });
+  }, [appData, setAppData, selectedOption]);
 
   return (
     <Container>
@@ -25,10 +31,19 @@ export const RequestList = () => {
       </div>
 
       <ButtonRow>
-        <BackButton> Voltar</BackButton>
+        <BackButton
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          Voltar
+        </BackButton>
         <NextButton
           disabled={!selectedOption}
-          onClick={() => alert("Para de faltar")}
+          onClick={() => {
+            setRequest();
+            navigate("/request");
+          }}
         >
           Continuar
         </NextButton>
