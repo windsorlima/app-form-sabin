@@ -9,9 +9,12 @@ export const FoulsOptions = ({ selectedOption, setSelectedOption }) => {
         <Container
           isSelected={selectedOption === option.value}
           onClick={() => setSelectedOption(option.value)}
+          key={option.value}
         >
           <span> {option.label}</span>
-          {true && <BsPersonCheck size={20} style={{ fill: "white" }} />}
+          {selectedOption === option.value && (
+            <BsPersonCheck size={20} style={{ fill: "white" }} />
+          )}
         </Container>
       ))}
     </>

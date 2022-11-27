@@ -23,6 +23,7 @@ export const RequestOptions = ({ selectedOption, setSelectedOption }) => {
           name={option.label}
           isSelected={selectedOption === option.value}
           selectOption={() => selectOption(option.value)}
+          key={option.value}
         />
       ))}
     </Container>

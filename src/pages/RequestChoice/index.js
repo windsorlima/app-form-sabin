@@ -59,7 +59,11 @@ export const RequestChoice = () => {
           disabled={!selectedOption}
           onClick={() => {
             setRequestChoice();
-            navigate("/activities");
+            if (selectedOption === "past_fouls") {
+              navigate("/existingFouls");
+            } else {
+              navigate("/activities");
+            }
           }}
         >
           Continuar

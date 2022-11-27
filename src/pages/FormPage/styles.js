@@ -5,8 +5,16 @@ export const Container = styled.div`
   max-height: 620px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 16px;
+  justify-content: space-between;
+
+  & > div:first-of-type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    padding: 16px;
+  }
 
   background-color: #f4f6f8;
 `;
