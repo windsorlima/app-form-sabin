@@ -30,7 +30,9 @@ export const ExistingFoulsForm = ({ appData }) => {
 
   const makePayload = useCallback(
     async (data) => {
-      const fileChangedToBase64 = await convertBase64(data.file);
+      const fileChangedToBase64 = await convertBase64(
+        data.justificationFile[0]
+      );
 
       const payload = {
         clientId: appData.selectedStudent.id,
@@ -43,28 +45,30 @@ export const ExistingFoulsForm = ({ appData }) => {
     [appData.selectedStudent.id]
   );
 
-  const makeRequest = useCallback(async () => {
-    const prePayload = await makePayload();
+  const makeRequest = useCallback(
+    async (data) => {
+      const prePayload = await makePayload(data);
 
-    const payload = {
-      fouls: appData.fouls,
-      commonInfo: { ...prePayload },
-    };
+      const payload = {
+        fouls: appData.fouls,
+        commonInfo: { ...prePayload },
+      };
 
-    await axios.post("http://localhost:3500/student/createCall", {
-      payload,
-    });
+      await axios.post("http://localhost:3500/student/createCall", {
+        ...payload,
+      });
 
-    alert("Success");
-  }, [appData.fouls, makePayload]);
+      alert("Success");
+    },
+    [appData.fouls, makePayload]
+  );
 
   return (
     <Container>
       <SelectedFouls> </SelectedFouls>
       <form
         onSubmit={handleSubmit((data) => {
-          makeRequest();
-          reset();
+          makeRequest(data);
         })}
       >
         <JustificationBox>
@@ -75,7 +79,11 @@ export const ExistingFoulsForm = ({ appData }) => {
 
         <FileBox>
           <label> Arquivo: </label>
-          <input type="file" name="file" {...register("file")} />
+          <input
+            type="file"
+            name="justificationFile"
+            {...register("justificationFile")}
+          />
           {errors.file?.message}
         </FileBox>
 

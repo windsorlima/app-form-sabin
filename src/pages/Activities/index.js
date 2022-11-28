@@ -41,7 +41,7 @@ export const Activities = () => {
         }
       );
 
-      setActivitiesList(activities);
+      setActivitiesList(activities.data);
     };
 
     getActivities()
