@@ -8,13 +8,16 @@ import {
   StudentInfo,
 } from "./styles";
 import { StudentActivities } from "../../components/StudentActivities";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BackButton } from "../../components/BackButton";
 import { NextButton } from "../../components/NextButton";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const Activities = () => {
   const [selectedActivities, setSelectedActivities] = useState([]);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(false);
+  const [activitiesList, setActivitiesList] = useState([]);
   const { appData, setAppData } = useControlApp();
   let navigate = useNavigate();
   const { selectedStudent, selectedSolicitation, selectedRequestChoice } =
@@ -24,6 +27,27 @@ export const Activities = () => {
   const setActivities = useCallback(() => {
     setAppData({ ...appData, activities: selectedActivities });
   }, [selectedActivities, setAppData, appData]);
+
+  useEffect(() => {
+    const getActivities = async () => {
+      setIsLoadingActivities(true);
+
+      const activities = await axios.get(
+        "http://localhost:3500/student/activities",
+        {
+          params: {
+            ra: selectedStudent.id,
+          },
+        }
+      );
+
+      setActivitiesList(activities);
+    };
+
+    getActivities()
+      .then(() => setIsLoadingActivities(false))
+      .catch(() => setIsLoadingActivities(false));
+  }, [selectedStudent.id]);
 
   const setActivity = useCallback(
     (event) => {
@@ -36,15 +60,6 @@ export const Activities = () => {
       }
     },
     [selectedActivities]
-  );
-
-  const activitiesList = useMemo(
-    () => [
-      { name: "Basquete", value: "basketball" },
-      { name: "Vôlei", value: "voleyball" },
-      { name: "Xadrez", value: "chess" },
-    ],
-    []
   );
 
   const selectAll = useCallback(() => {
@@ -66,12 +81,16 @@ export const Activities = () => {
           <span> Opção escolhida:</span>
           <span>{requestChoice.label}</span>
         </ChoiceInfo>
-        <StudentActivities
-          activities={activitiesList}
-          selectedActivities={selectedActivities}
-          setActivity={(event) => setActivity(event)}
-          selectAll={selectAll}
-        />
+        {!activitiesList.length || isLoadingActivities ? (
+          <span>Loading ... </span>
+        ) : (
+          <StudentActivities
+            activities={activitiesList}
+            selectedActivities={selectedActivities}
+            setActivity={(event) => setActivity(event)}
+            selectAll={selectAll}
+          />
+        )}
       </div>
       <ButtonRow>
         <BackButton

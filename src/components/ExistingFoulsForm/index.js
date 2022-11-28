@@ -33,8 +33,8 @@ export const ExistingFoulsForm = ({ appData }) => {
       const fileChangedToBase64 = await convertBase64(data.file);
 
       const payload = {
-        codigoCliente: appData.selectedStudent.id,
-        justificativa: data.justification,
+        clientId: appData.selectedStudent.id,
+        justification: data.justification,
         fileBase64: fileChangedToBase64,
       };
 
@@ -48,12 +48,14 @@ export const ExistingFoulsForm = ({ appData }) => {
 
     const payload = {
       fouls: appData.fouls,
-      body: { ...prePayload },
+      commonInfo: { ...prePayload },
     };
 
     await axios.post("http://localhost:3500/student/createCall", {
       payload,
     });
+
+    alert("Success");
   }, [appData.fouls, makePayload]);
 
   return (
