@@ -37,6 +37,7 @@ export const ExistingFoulsForm = ({ appData }) => {
       const payload = {
         clientId: appData.selectedStudent.id,
         justification: data.justification,
+        fileName: data.justificationFile[0].name,
         fileBase64: fileChangedToBase64,
       };
 

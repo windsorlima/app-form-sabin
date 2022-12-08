@@ -51,19 +51,22 @@ export const Activities = () => {
 
   const setActivity = useCallback(
     (event) => {
-      if (selectedActivities.includes(event)) {
+      const currentActivity = activitiesList.find(
+        (element) => element.value === event
+      );
+      if (selectedActivities.includes(currentActivity)) {
         setSelectedActivities(
-          selectedActivities.filter((activity) => activity !== event)
+          selectedActivities.filter((activity) => activity.value !== event)
         );
       } else {
-        setSelectedActivities([...selectedActivities, event]);
+        setSelectedActivities([...selectedActivities, currentActivity]);
       }
     },
-    [selectedActivities]
+    [selectedActivities, activitiesList]
   );
 
   const selectAll = useCallback(() => {
-    setSelectedActivities(activitiesList.map((activity) => activity.value));
+    setSelectedActivities(activitiesList.map((activity) => activity));
   }, [activitiesList]);
 
   return (

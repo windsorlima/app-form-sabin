@@ -2,7 +2,7 @@ import { BsPersonCheck } from "react-icons/bs";
 import { Container } from "./styles";
 
 export const Activity = ({ activity, setActivity, selectedActivities }) => {
-  const isSelected = selectedActivities.includes(activity.value);
+  const isSelected = selectedActivities.includes(activity);
 
   return (
     <Container

@@ -5,12 +5,13 @@ import { ExistingFoulsForm } from "../../components/ExistingFoulsForm";
 import { useCallback } from "react";
 
 export const FormPage = () => {
-  const { appData, setAppData } = useControlApp();
+  const { appData } = useControlApp();
 
   const { selectedRequestChoice } = appData;
 
   const getForm = useCallback(() => {
-    if (selectedRequestChoice === "future_fouls") return <FutureFoulsForm />;
+    if (selectedRequestChoice === "future_fouls")
+      return <FutureFoulsForm appData={appData} />;
 
     return <ExistingFoulsForm appData={appData} />;
   }, [selectedRequestChoice, appData]);

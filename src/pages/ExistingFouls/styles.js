@@ -99,6 +99,7 @@ export const FoulsBox = styled.div`
   border-radius: 12px;
 
   background-color: #ffffff;
+  overflow: auto;
 `;
 
 export const Foul = styled.div`
