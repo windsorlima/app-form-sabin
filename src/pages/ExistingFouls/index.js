@@ -30,7 +30,7 @@ export const ExistingFouls = () => {
     setIsLoading(true);
     const getFouls = async () => {
       const response = await axios.get(
-        "http://localhost:3500/student/getFouls",
+        "https://portal.albertsabin.com.br:8095/student/getFouls",
         {
           params: {
             ra: selectedStudent.id,

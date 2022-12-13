@@ -64,9 +64,12 @@ export const ExistingFoulsForm = ({ appData }) => {
         commonInfo: { ...prePayload },
       };
 
-      await axios.post("http://localhost:3500/student/createCall", {
-        ...payload,
-      });
+      await axios.post(
+        "https://portal.albertsabin.com.br:8095/student/createCall",
+        {
+          ...payload,
+        }
+      );
 
       alert("Success");
     },

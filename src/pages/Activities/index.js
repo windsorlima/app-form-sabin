@@ -33,7 +33,7 @@ export const Activities = () => {
       setIsLoadingActivities(true);
 
       const activities = await axios.get(
-        "http://localhost:3500/student/activities",
+        "https://portal.albertsabin.com.br:8095/student/activities",
         {
           params: {
             ra: selectedStudent.id,

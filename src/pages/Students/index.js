@@ -20,15 +20,18 @@ export const Students = () => {
         await window.LayersPortal.connectedPromise;
         const { userId, communityId, session } = window.LayersPortal;
 
-        const auth = await axios.post(`http://localhost:3500/user/auth`, {
-          userId,
-          communityId,
-          session,
-        });
+        const auth = await axios.post(
+          `https://portal.albertsabin.com.br:8095/user/auth`,
+          {
+            userId,
+            communityId,
+            session,
+          }
+        );
 
         if (auth.status === 200) {
           const responseStudents = await axios.get(
-            `http://localhost:3500/student/list`,
+            `https://portal.albertsabin.com.br:8095/student/list`,
             {
               params: { userId, community: communityId, session },
             }
