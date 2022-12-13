@@ -5,6 +5,7 @@ import { Container, DateBox, JustificationBox, FileBox } from "./styles";
 import { InputDate } from "../InputDate";
 import { useCallback } from "react";
 import axios from "axios";
+import { NextButton } from "../NextButton";
 
 export const FutureFoulsForm = ({ appData }) => {
   const {
@@ -101,10 +102,10 @@ export const FutureFoulsForm = ({ appData }) => {
             name="justificationFile"
             {...register("justificationFile")}
           />
-          {errors.file?.message}
+          {errors.justificationFile?.message}
         </FileBox>
 
-        <button type="submit">Enviar</button>
+        <NextButton type="submit">Enviar</NextButton>
       </form>
     </Container>
   );

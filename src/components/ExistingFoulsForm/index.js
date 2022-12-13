@@ -1,15 +1,24 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { NextButton } from "../NextButton";
 import { existingFoulsSchema } from "./schema";
-import { Container, SelectedFouls, JustificationBox, FileBox } from "./styles";
+import {
+  Container,
+  SelectedFouls,
+  JustificationBox,
+  FileBox,
+  ButtonRow,
+} from "./styles";
 import { useCallback } from "react";
 import axios from "axios";
+import { BackButton } from "../BackButton";
 
 export const ExistingFoulsForm = ({ appData }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
     reset,
   } = useForm({ resolver: yupResolver(existingFoulsSchema) });
 
@@ -85,10 +94,12 @@ export const ExistingFoulsForm = ({ appData }) => {
             name="justificationFile"
             {...register("justificationFile")}
           />
-          {errors.file?.message}
+          {errors.justificationFile?.message}
         </FileBox>
 
-        <button type="submit">Enviar</button>
+        {console.log(getValues())}
+
+        <NextButton type="submit">Enviar</NextButton>
       </form>
     </Container>
   );

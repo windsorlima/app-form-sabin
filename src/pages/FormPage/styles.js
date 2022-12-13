@@ -18,3 +18,8 @@ export const Container = styled.div`
 
   background-color: #f4f6f8;
 `;
+
+export const ButtonRow = styled.div`
+  display: flex;
+  padding: 16px;
+`;

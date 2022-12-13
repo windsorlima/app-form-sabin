@@ -1,11 +1,14 @@
-import { Container } from "./styles";
+import { ButtonRow, Container } from "./styles";
 import { useControlApp } from "../../hooks/app";
 import { FutureFoulsForm } from "../../components/FutureFoulsForm";
 import { ExistingFoulsForm } from "../../components/ExistingFoulsForm";
 import { useCallback } from "react";
+import { BackButton } from "../../components/BackButton";
+import { useNavigate } from "react-router-dom";
 
 export const FormPage = () => {
   const { appData } = useControlApp();
+  let navigate = useNavigate();
 
   const { selectedRequestChoice } = appData;
 
@@ -19,6 +22,15 @@ export const FormPage = () => {
   return (
     <Container>
       <div>{getForm()}</div>
+      <ButtonRow>
+        <BackButton
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          Voltar
+        </BackButton>
+      </ButtonRow>
     </Container>
   );
 };
