@@ -14,10 +14,10 @@ export const FormPage = () => {
 
   const getForm = useCallback(() => {
     if (selectedRequestChoice === "future_fouls")
-      return <FutureFoulsForm appData={appData} />;
+      return <FutureFoulsForm appData={appData} navigate={navigate} />;
 
-    return <ExistingFoulsForm appData={appData} />;
-  }, [selectedRequestChoice, appData]);
+    return <ExistingFoulsForm appData={appData} navigate={navigate} />;
+  }, [selectedRequestChoice, appData, navigate]);
 
   return (
     <Container>

@@ -9,11 +9,12 @@ import {
   FileBox,
   ButtonRow,
 } from "./styles";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { BackButton } from "../BackButton";
+import { Loading } from "../Loading";
 
-export const ExistingFoulsForm = ({ appData }) => {
+export const ExistingFoulsForm = ({ appData, navigate }) => {
   const {
     register,
     handleSubmit,
@@ -21,6 +22,8 @@ export const ExistingFoulsForm = ({ appData }) => {
     getValues,
     reset,
   } = useForm({ resolver: yupResolver(existingFoulsSchema) });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -39,15 +42,17 @@ export const ExistingFoulsForm = ({ appData }) => {
 
   const makePayload = useCallback(
     async (data) => {
-      const fileChangedToBase64 = await convertBase64(
-        data.justificationFile[0]
-      );
+      let fileChangedToBase64;
+
+      if (data.justificationFile[0]) {
+        fileChangedToBase64 = await convertBase64(data.justificationFile[0]);
+      }
 
       const payload = {
         clientId: appData.selectedStudent.id,
         justification: data.justification,
-        fileName: data.justificationFile[0].name,
-        fileBase64: fileChangedToBase64,
+        fileName: fileChangedToBase64 ? data.justificationFile[0].name : "",
+        fileBase64: fileChangedToBase64 ? fileChangedToBase64 : "",
       };
 
       return payload;
@@ -57,6 +62,7 @@ export const ExistingFoulsForm = ({ appData }) => {
 
   const makeRequest = useCallback(
     async (data) => {
+      setIsLoading(true);
       const prePayload = await makePayload(data);
 
       const payload = {
@@ -64,16 +70,20 @@ export const ExistingFoulsForm = ({ appData }) => {
         commonInfo: { ...prePayload },
       };
 
-      await axios.post(
+      const response = await axios.post(
         "https://portal.albertsabin.com.br:8095/student/createCall",
         {
           ...payload,
         }
       );
 
-      alert("Success");
+      setIsLoading(false);
+
+      if (response.data.success) {
+        navigate("/");
+      }
     },
-    [appData.fouls, makePayload]
+    [appData.fouls, makePayload, navigate]
   );
 
   return (
@@ -102,7 +112,9 @@ export const ExistingFoulsForm = ({ appData }) => {
 
         {console.log(getValues())}
 
-        <NextButton type="submit">Enviar</NextButton>
+        <NextButton type="submit" isLoading={isLoading}>
+          Enviar
+        </NextButton>
       </form>
     </Container>
   );

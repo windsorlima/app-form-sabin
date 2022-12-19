@@ -3,17 +3,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { futureFoulsSchema } from "./schema";
 import { Container, DateBox, JustificationBox, FileBox } from "./styles";
 import { InputDate } from "../InputDate";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { NextButton } from "../NextButton";
 
-export const FutureFoulsForm = ({ appData }) => {
+export const FutureFoulsForm = ({ appData, navigate }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm({ resolver: yupResolver(futureFoulsSchema) });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -32,16 +34,19 @@ export const FutureFoulsForm = ({ appData }) => {
 
   const makePayload = useCallback(
     async (data) => {
-      const fileChangedToBase64 = await convertBase64(
-        data.justificationFile[0]
-      );
+      let fileChangedToBase64;
+
+      if (data.justificationFile[0]) {
+        fileChangedToBase64 = await convertBase64(data.justificationFile[0]);
+      }
 
       const payload = {
         clientId: appData.selectedStudent.id,
         justification: data.justification,
         fromDate: data.fromDate,
         toDate: data.toDate,
-        fileBase64: fileChangedToBase64,
+        fileName: fileChangedToBase64 ? data.justificationFile[0].name : "",
+        fileBase64: fileChangedToBase64 ? fileChangedToBase64 : "",
       };
 
       return payload;
@@ -51,6 +56,7 @@ export const FutureFoulsForm = ({ appData }) => {
 
   const makeRequest = useCallback(
     async (data) => {
+      setIsLoading(true);
       const prePayload = await makePayload(data);
 
       const payload = {
@@ -58,16 +64,19 @@ export const FutureFoulsForm = ({ appData }) => {
         commonInfo: { ...prePayload },
       };
 
-      await axios.post(
+      const response = await axios.post(
         "https://portal.albertsabin.com.br:8095/student/createFutureCall",
         {
           ...payload,
         }
       );
 
-      alert("Success");
+      setIsLoading(false);
+      if (response.data.success) {
+        navigate("/");
+      }
     },
-    [appData.activities, makePayload]
+    [appData.activities, makePayload, navigate]
   );
 
   return (
@@ -108,7 +117,9 @@ export const FutureFoulsForm = ({ appData }) => {
           {errors.justificationFile?.message}
         </FileBox>
 
-        <NextButton type="submit">Enviar</NextButton>
+        <NextButton type="submit" isLoading={isLoading}>
+          Enviar
+        </NextButton>
       </form>
     </Container>
   );

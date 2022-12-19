@@ -14,9 +14,4 @@ export const existingFoulsSchema = yup.object().shape({
     .min(10, "A justificativa precisa ter no mínimo 10 caracteres")
     .max(100, "A justificativa pode ter no mínimo 100 caracteres")
     .typeError(),
-  justificationFile: yup
-    .mixed()
-    .test("required", "O arquivo é obrigatório", (value) => {
-      return value && value.length;
-    }),
 });
