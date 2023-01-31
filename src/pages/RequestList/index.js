@@ -21,8 +21,8 @@ export const RequestList = () => {
     <Container>
       <div>
         <StudentInfo>
-          <span> {selectedStudent.name} </span>
-          <span> {selectedStudent.grade} </span>
+          <span> {selectedStudent ? selectedStudent.name : ""} </span>
+          <span> {selectedStudent ? selectedStudent.grade : ""} </span>
         </StudentInfo>
         <RequestOptions
           selectedOption={selectedOption}

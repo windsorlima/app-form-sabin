@@ -13,6 +13,7 @@ import { BackButton } from "../../components/BackButton";
 import { NextButton } from "../../components/NextButton";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { api } from "../../service/api";
 
 export const Activities = () => {
   const [selectedActivities, setSelectedActivities] = useState([]);
@@ -30,18 +31,19 @@ export const Activities = () => {
 
   useEffect(() => {
     const getActivities = async () => {
-      setIsLoadingActivities(true);
+      try {
+        setIsLoadingActivities(true);
 
-      const activities = await axios.get(
-        "https://portal.albertsabin.com.br:8095/student/activities",
-        {
+        const activities = await api.get("/student/activities", {
           params: {
             ra: selectedStudent.id,
           },
-        }
-      );
+        });
 
-      setActivitiesList(activities.data);
+        setActivitiesList(activities.data);
+      } catch (error) {
+        setActivitiesList([{ name: error.response.data.message, value: "" }]);
+      }
     };
 
     getActivities()
@@ -51,6 +53,10 @@ export const Activities = () => {
 
   const setActivity = useCallback(
     (event) => {
+      if (event === "") {
+        return;
+      }
+
       const currentActivity = activitiesList.find(
         (element) => element.value === event
       );
@@ -66,6 +72,9 @@ export const Activities = () => {
   );
 
   const selectAll = useCallback(() => {
+    if (activitiesList.length === 1 && activitiesList[0].value === "") {
+      return;
+    }
     setSelectedActivities(activitiesList.map((activity) => activity));
   }, [activitiesList]);
 
@@ -73,16 +82,16 @@ export const Activities = () => {
     <Container>
       <div>
         <StudentInfo>
-          <span> {selectedStudent.name} </span>
-          <span> {selectedStudent.grade} </span>
+          <span> {selectedStudent ? selectedStudent.name : ""} </span>
+          <span> {selectedStudent ? selectedStudent.grade : ""} </span>
         </StudentInfo>
         <SolicitationInfo>
           <span> Solicitação requisitada:</span>
-          <span>{solicitation.label}</span>
+          <span>{solicitation ? solicitation.label : ""}</span>
         </SolicitationInfo>
         <ChoiceInfo>
           <span> Opção escolhida:</span>
-          <span>{requestChoice.label}</span>
+          <span>{requestChoice ? requestChoice.label : ""}</span>
         </ChoiceInfo>
         {!activitiesList.length || isLoadingActivities ? (
           <span>Loading ... </span>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { BackButton } from "../../components/BackButton";
 import { NextButton } from "../../components/NextButton";
 import { useControlApp } from "../../hooks/app";
+import { api } from "../../service/api";
 import { getRequestChoiceObject, getSolicitationObject } from "../../utils";
 import {
   ButtonRow,
@@ -29,23 +30,30 @@ export const ExistingFouls = () => {
   useEffect(() => {
     setIsLoading(true);
     const getFouls = async () => {
-      const response = await axios.get(
-        "https://portal.albertsabin.com.br:8095/student/getFouls",
-        {
+      try {
+        const response = await api.get("/student/getFouls", {
           params: {
             ra: selectedStudent.id,
           },
-        }
-      );
+        });
 
-      setFouls(response.data);
+        setFouls(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+        setFouls([{ description: error.response.data.message, code: "" }]);
+      }
     };
 
-    getFouls().then(() => setIsLoading(false));
+    getFouls().then();
   }, [selectedStudent.id]);
 
   const selectFoul = useCallback(
     (foul) => {
+      if (foul.code === "") {
+        return;
+      }
+
       if (selectedFouls.includes(foul)) {
         setSelectedFouls((s) =>
           s.filter((element) => element.code !== foul.code)
@@ -65,16 +73,16 @@ export const ExistingFouls = () => {
     <Container>
       <div>
         <StudentInfo>
-          <span> {selectedStudent.name} </span>
-          <span> {selectedStudent.grade} </span>
+          <span> {selectedStudent ? selectedStudent.name : ""} </span>
+          <span> {selectedStudent ? selectedStudent.grade : ""} </span>
         </StudentInfo>
         <SolicitationInfo>
           <span> Solicitação requisitada:</span>
-          <span>{solicitation.label}</span>
+          <span>{solicitation ? solicitation.label : ""}</span>
         </SolicitationInfo>
         <ChoiceInfo>
           <span> Opção escolhida:</span>
-          <span>{requestChoice.label}</span>
+          <span>{requestChoice ? requestChoice.label : ""}</span>
         </ChoiceInfo>
         <FoulsBox>
           {isLoading

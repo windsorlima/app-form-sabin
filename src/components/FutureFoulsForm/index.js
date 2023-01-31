@@ -6,6 +6,7 @@ import { InputDate } from "../InputDate";
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { NextButton } from "../NextButton";
+import { api } from "../../service/api";
 
 export const FutureFoulsForm = ({ appData, navigate }) => {
   const {
@@ -64,12 +65,9 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
         commonInfo: { ...prePayload },
       };
 
-      const response = await axios.post(
-        "https://portal.albertsabin.com.br:8095/student/createFutureCall",
-        {
-          ...payload,
-        }
-      );
+      const response = await api.post("/student/createFutureCall", {
+        ...payload,
+      });
 
       setIsLoading(false);
       if (response.data.success) {

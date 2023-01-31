@@ -4,6 +4,7 @@ import { useControlApp } from "../../hooks/app";
 import { useNavigate } from "react-router-dom";
 import { Container } from "./styles";
 import axios from "axios";
+import { api } from "../../service/api";
 
 export const Students = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,22 +21,16 @@ export const Students = () => {
         await window.LayersPortal.connectedPromise;
         const { userId, communityId, session } = window.LayersPortal;
 
-        const auth = await axios.post(
-          `https://portal.albertsabin.com.br:8095/user/auth`,
-          {
-            userId,
-            communityId,
-            session,
-          }
-        );
+        const auth = await api.post(`/user/auth`, {
+          userId,
+          communityId,
+          session,
+        });
 
         if (auth.status === 200) {
-          const responseStudents = await axios.get(
-            `https://portal.albertsabin.com.br:8095/student/list`,
-            {
-              params: { userId, community: communityId, session },
-            }
-          );
+          const responseStudents = await api.get(`/student/list`, {
+            params: { userId, community: communityId, session },
+          });
 
           setAppData({ ...appData, students: responseStudents.data });
         }
@@ -43,7 +38,7 @@ export const Students = () => {
 
       connectLayer().then(() => setIsLoading(false));
     }
-  }, []);
+  }, [students.length, appData, setAppData]);
 
   const selectStudent = useCallback(
     (student) => {

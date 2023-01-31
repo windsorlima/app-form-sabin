@@ -34,15 +34,15 @@ export const RequestChoice = () => {
     <Container>
       <div>
         <StudentInfo>
-          <span> {selectedStudent.name} </span>
-          <span> {selectedStudent.grade} </span>
+          <span> {selectedStudent ? selectedStudent.name : ""} </span>
+          <span> {selectedStudent ? selectedStudent.name : ""} </span>
         </StudentInfo>
         <SolicitationInfo>
           <span> Solicitação requisitada:</span>
-          <span>{solicitation.label}</span>
+          <span>{solicitation ? solicitation.label : ""}</span>
         </SolicitationInfo>
         <RequestChoose
-          selectedSolicitation={solicitation.value}
+          selectedSolicitation={solicitation ? solicitation.value : ""}
           setSelectedOption={(option) => selectOption(option)}
           selectedOption={selectedOption}
         />

@@ -13,6 +13,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { BackButton } from "../BackButton";
 import { Loading } from "../Loading";
+import { api } from "../../service/api";
 
 export const ExistingFoulsForm = ({ appData, navigate }) => {
   const {
@@ -70,12 +71,9 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
         commonInfo: { ...prePayload },
       };
 
-      const response = await axios.post(
-        "https://portal.albertsabin.com.br:8095/student/createCall",
-        {
-          ...payload,
-        }
-      );
+      const response = await api.post("/student/createCall", {
+        ...payload,
+      });
 
       setIsLoading(false);
 
