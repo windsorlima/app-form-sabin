@@ -38,7 +38,7 @@ export const Students = () => {
 
       connectLayer().then(() => setIsLoading(false));
     }
-  }, [students.length, appData, setAppData]);
+  }, []);
 
   const selectStudent = useCallback(
     (student) => {

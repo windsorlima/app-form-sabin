@@ -47,3 +47,8 @@ export const JustificationBox = styled.div`
 `;
 
 export const FileBox = styled.div``;
+
+export const SuccessText = styled.p`
+  text-align: center;
+  color: green;
+`;

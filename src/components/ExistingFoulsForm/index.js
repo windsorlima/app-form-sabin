@@ -2,13 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NextButton } from "../NextButton";
 import { existingFoulsSchema } from "./schema";
-import {
-  Container,
-  SelectedFouls,
-  JustificationBox,
-  FileBox,
-  ButtonRow,
-} from "./styles";
+import { Container, JustificationBox, FileBox, SuccessText } from "./styles";
 import { useCallback, useState } from "react";
 import axios from "axios";
 import { BackButton } from "../BackButton";
@@ -25,6 +19,7 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
   } = useForm({ resolver: yupResolver(existingFoulsSchema) });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -75,10 +70,12 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
         ...payload,
       });
 
-      setIsLoading(false);
-
       if (response.data.success) {
-        navigate("/");
+        setSuccess(true);
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/");
+        }, 2000);
       }
     },
     [appData.fouls, makePayload, navigate]
@@ -86,7 +83,6 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
 
   return (
     <Container>
-      <SelectedFouls> </SelectedFouls>
       <form
         onSubmit={handleSubmit((data) => {
           makeRequest(data);
@@ -104,16 +100,16 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
             type="file"
             name="justificationFile"
             {...register("justificationFile")}
+            accept="image/*, .pdf"
           />
           {errors.justificationFile?.message}
         </FileBox>
-
-        {console.log(getValues())}
 
         <NextButton type="submit" isLoading={isLoading}>
           Enviar
         </NextButton>
       </form>
+      {success && <SuccessText> Atendimento criado com sucesso! </SuccessText>}
     </Container>
   );
 };

@@ -1,7 +1,13 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { futureFoulsSchema } from "./schema";
-import { Container, DateBox, JustificationBox, FileBox } from "./styles";
+import {
+  Container,
+  DateBox,
+  JustificationBox,
+  FileBox,
+  SuccessText,
+} from "./styles";
 import { InputDate } from "../InputDate";
 import { useCallback, useState } from "react";
 import axios from "axios";
@@ -17,6 +23,7 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
   } = useForm({ resolver: yupResolver(futureFoulsSchema) });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -69,9 +76,12 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
         ...payload,
       });
 
-      setIsLoading(false);
       if (response.data.success) {
-        navigate("/");
+        setSuccess(true);
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/");
+        }, 2000);
       }
     },
     [appData.activities, makePayload, navigate]
@@ -111,6 +121,7 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
             type="file"
             name="justificationFile"
             {...register("justificationFile")}
+            accept="image/*, .pdf"
           />
           {errors.justificationFile?.message}
         </FileBox>
@@ -119,6 +130,7 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
           Enviar
         </NextButton>
       </form>
+      {success && <SuccessText> Atendimento criado com sucesso! </SuccessText>}
     </Container>
   );
 };

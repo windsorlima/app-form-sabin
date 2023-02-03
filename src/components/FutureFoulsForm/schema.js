@@ -1,16 +1,13 @@
 import * as yup from "yup";
-import { add } from "date-fns";
 
-const tomorrow = add(new Date(), {
-  days: 1,
-});
+const today = new Date();
 
-tomorrow.setHours(0, 0, 0, 0);
+today.setHours(0, 0, 0, 0);
 
 export const futureFoulsSchema = yup.object().shape({
   fromDate: yup
     .date("Data inválida")
-    .min(tomorrow, "A data inicial deve ser maior do que hoje")
+    .min(today, "A data inicial deve ser maior ou igual a hoje")
     .required()
     .typeError("A data inicial é obrigatória"),
   toDate: yup
