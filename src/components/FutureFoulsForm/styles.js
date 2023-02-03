@@ -46,9 +46,22 @@ export const JustificationBox = styled.div`
   }
 `;
 
-export const FileBox = styled.div``;
+export const FileBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  & > span {
+    color: red;
+  }
+`;
 
 export const SuccessText = styled.p`
   text-align: center;
   color: green;
+`;
+
+export const ErrorText = styled.p`
+  text-align: center;
+  color: red;
 `;

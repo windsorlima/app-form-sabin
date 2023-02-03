@@ -2,11 +2,14 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { NextButton } from "../NextButton";
 import { existingFoulsSchema } from "./schema";
-import { Container, JustificationBox, FileBox, SuccessText } from "./styles";
+import {
+  Container,
+  JustificationBox,
+  FileBox,
+  SuccessText,
+  ErrorText,
+} from "./styles";
 import { useCallback, useState } from "react";
-import axios from "axios";
-import { BackButton } from "../BackButton";
-import { Loading } from "../Loading";
 import { api } from "../../service/api";
 
 export const ExistingFoulsForm = ({ appData, navigate }) => {
@@ -14,12 +17,11 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
-    reset,
   } = useForm({ resolver: yupResolver(existingFoulsSchema) });
 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -59,23 +61,30 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
   const makeRequest = useCallback(
     async (data) => {
       setIsLoading(true);
-      const prePayload = await makePayload(data);
 
-      const payload = {
-        fouls: appData.fouls,
-        commonInfo: { ...prePayload },
-      };
+      try {
+        const prePayload = await makePayload(data);
 
-      const response = await api.post("/student/createCall", {
-        ...payload,
-      });
+        const payload = {
+          fouls: appData.fouls,
+          commonInfo: { ...prePayload },
+        };
 
-      if (response.data.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate("/");
-        }, 2000);
+        const response = await api.post("/student/createCall", {
+          ...payload,
+        });
+
+        if (response.data.success) {
+          setSuccess(true);
+          setTimeout(() => {
+            setIsLoading(false);
+            setError("");
+            navigate("/");
+          }, 2000);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        setError("Por favor, procure a secretaria.");
       }
     },
     [appData.fouls, makePayload, navigate]
@@ -95,7 +104,7 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
         </JustificationBox>
 
         <FileBox>
-          <label> Arquivo: </label>
+          <label> Anexar atestado: </label>
           <input
             type="file"
             name="justificationFile"
@@ -109,7 +118,8 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
           Enviar
         </NextButton>
       </form>
-      {success && <SuccessText> Atendimento criado com sucesso! </SuccessText>}
+      {success && <SuccessText> Falta justificada com sucesso! </SuccessText>}
+      {error && <ErrorText> {error} </ErrorText>}
     </Container>
   );
 };

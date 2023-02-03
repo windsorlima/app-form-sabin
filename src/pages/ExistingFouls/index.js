@@ -106,7 +106,7 @@ export const ExistingFouls = () => {
           Voltar
         </BackButton>
         <NextButton
-          disabled={false}
+          disabled={!selectedFouls.length}
           onClick={() => {
             setFoulsInStore();
             navigate("/form");

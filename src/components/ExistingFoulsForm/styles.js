@@ -52,3 +52,8 @@ export const SuccessText = styled.p`
   text-align: center;
   color: green;
 `;
+
+export const ErrorText = styled.p`
+  text-align: center;
+  color: red;
+`;

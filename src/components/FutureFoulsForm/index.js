@@ -7,10 +7,10 @@ import {
   JustificationBox,
   FileBox,
   SuccessText,
+  ErrorText,
 } from "./styles";
 import { InputDate } from "../InputDate";
 import { useCallback, useState } from "react";
-import axios from "axios";
 import { NextButton } from "../NextButton";
 import { api } from "../../service/api";
 
@@ -19,8 +19,9 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({ resolver: yupResolver(futureFoulsSchema) });
+
+  const [error, setError] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -64,24 +65,29 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
 
   const makeRequest = useCallback(
     async (data) => {
-      setIsLoading(true);
-      const prePayload = await makePayload(data);
+      try {
+        setIsLoading(true);
+        const prePayload = await makePayload(data);
 
-      const payload = {
-        activities: appData.activities,
-        commonInfo: { ...prePayload },
-      };
+        const payload = {
+          activities: appData.activities,
+          commonInfo: { ...prePayload },
+        };
 
-      const response = await api.post("/student/createFutureCall", {
-        ...payload,
-      });
+        const response = await api.post("/student/createFutureCall", {
+          ...payload,
+        });
 
-      if (response.data.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate("/");
-        }, 2000);
+        if (response.data.success) {
+          setSuccess(true);
+          setTimeout(() => {
+            setIsLoading(false);
+            navigate("/");
+          }, 2000);
+        }
+      } catch (error) {
+        setIsLoading(false);
+        setError("Por favor, procure a secretaria.");
       }
     },
     [appData.activities, makePayload, navigate]
@@ -116,21 +122,22 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
         </JustificationBox>
 
         <FileBox>
-          <label> Arquivo: </label>
+          <label> Anexar atestado: </label>
           <input
             type="file"
             name="justificationFile"
             {...register("justificationFile")}
             accept="image/*, .pdf"
           />
-          {errors.justificationFile?.message}
+          <span>{errors.justificationFile?.message}</span>
         </FileBox>
 
         <NextButton type="submit" isLoading={isLoading}>
           Enviar
         </NextButton>
       </form>
-      {success && <SuccessText> Atendimento criado com sucesso! </SuccessText>}
+      {success && <SuccessText> Falta justificada com sucesso! </SuccessText>}
+      {error && <ErrorText> {error} </ErrorText>}
     </Container>
   );
 };
