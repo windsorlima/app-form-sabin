@@ -7,17 +7,29 @@ import { BackButton } from "../../components/BackButton";
 import { useNavigate } from "react-router-dom";
 
 export const FormPage = () => {
-  const { appData } = useControlApp();
+  const { appData, setAppData } = useControlApp();
   let navigate = useNavigate();
 
   const { selectedRequestChoice } = appData;
 
   const getForm = useCallback(() => {
     if (selectedRequestChoice === "future_fouls")
-      return <FutureFoulsForm appData={appData} navigate={navigate} />;
+      return (
+        <FutureFoulsForm
+          appData={appData}
+          navigate={navigate}
+          setAppData={setAppData}
+        />
+      );
 
-    return <ExistingFoulsForm appData={appData} navigate={navigate} />;
-  }, [selectedRequestChoice, appData, navigate]);
+    return (
+      <ExistingFoulsForm
+        appData={appData}
+        navigate={navigate}
+        setAppData={setAppData}
+      />
+    );
+  }, [selectedRequestChoice, appData, navigate, setAppData]);
 
   return (
     <Container>

@@ -12,7 +12,7 @@ import {
 import { useCallback, useState } from "react";
 import { api } from "../../service/api";
 
-export const ExistingFoulsForm = ({ appData, navigate }) => {
+export const ExistingFoulsForm = ({ appData, navigate, setAppData }) => {
   const {
     register,
     handleSubmit,
@@ -70,24 +70,27 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
           commonInfo: { ...prePayload },
         };
 
+        console.log(payload);
+
         const response = await api.post("/student/createCall", {
           ...payload,
         });
 
         if (response.data.success) {
           setSuccess(true);
-          setTimeout(() => {
-            setIsLoading(false);
-            setError("");
-            navigate("/");
-          }, 2000);
+
+          setIsLoading(false);
+          setError("");
+          setAppData({ ...appData, ...data });
+          navigate("/success");
         }
       } catch (error) {
         setIsLoading(false);
-        setError("Por favor, procure a secretaria.");
+        setError("Por favor, procure a coordenação de esportes.");
+        throw new Error(error);
       }
     },
-    [appData.fouls, makePayload, navigate]
+    [makePayload, navigate, setAppData, appData]
   );
 
   return (

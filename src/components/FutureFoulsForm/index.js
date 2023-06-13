@@ -14,7 +14,7 @@ import { useCallback, useState } from "react";
 import { NextButton } from "../NextButton";
 import { api } from "../../service/api";
 
-export const FutureFoulsForm = ({ appData, navigate }) => {
+export const FutureFoulsForm = ({ appData, navigate, setAppData }) => {
   const {
     register,
     handleSubmit,
@@ -80,17 +80,18 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
 
         if (response.data.success) {
           setSuccess(true);
-          setTimeout(() => {
-            setIsLoading(false);
-            navigate("/");
-          }, 2000);
+          setAppData({ ...appData, ...data });
+          setIsLoading(false);
+          navigate("/success");
         }
       } catch (error) {
         setIsLoading(false);
-        setError("Por favor, procure a secretaria.");
+        setError(
+          "Data inicial ou final digitada não corresponde a um dia de aula dessa atividade."
+        );
       }
     },
-    [appData.activities, makePayload, navigate]
+    [makePayload, navigate, appData, setAppData]
   );
 
   return (
@@ -100,6 +101,11 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
           makeRequest(data);
         })}
       >
+        <span>
+          Favor digitar a data do primeiro e do último dia de falta do aluno
+          nesta atividade
+        </span>
+
         <DateBox>
           <InputDate
             register={register}
