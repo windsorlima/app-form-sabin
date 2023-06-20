@@ -25,7 +25,15 @@ export const SuccessPage = () => {
               <span>Até: {new Date(appData.toDate).toLocaleDateString()}</span>
             </>
           ) : (
-            <span>{fouls ? fouls.map((foul) => foul.description) : []}</span>
+            <span>
+              {fouls
+                ? fouls.map((foul) => (
+                    <>
+                      {foul.description} <br />
+                    </>
+                  ))
+                : []}
+            </span>
           )}
         </div>
         <div>
