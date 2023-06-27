@@ -7,11 +7,4 @@ const tomorrow = add(new Date(), {
 
 tomorrow.setHours(0, 0, 0, 0);
 
-export const existingFoulsSchema = yup.object().shape({
-  justification: yup
-    .string()
-    .required("A justificativa é obrigatória")
-    .min(10, "A justificativa precisa ter no mínimo 10 caracteres")
-    .max(100, "A justificativa pode ter no máximo 100 caracteres")
-    .typeError(),
-});
+export const existingFoulsSchema = yup.object().shape({});
