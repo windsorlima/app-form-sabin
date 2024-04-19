@@ -7,4 +7,8 @@ const tomorrow = add(new Date(), {
 
 tomorrow.setHours(0, 0, 0, 0);
 
-export const existingFoulsSchema = yup.object().shape({});
+export const existingFoulsSchema = yup.object().shape({
+  justification: yup
+    .string()
+    .typeError(),
+});

@@ -14,7 +14,7 @@ import { useCallback, useState } from "react";
 import { NextButton } from "../NextButton";
 import { api } from "../../service/api";
 
-export const FutureFoulsForm = ({ appData, navigate, setAppData }) => {
+export const FutureFoulsForm = ({ appData, navigate }) => {
   const {
     register,
     handleSubmit,
@@ -80,18 +80,31 @@ export const FutureFoulsForm = ({ appData, navigate, setAppData }) => {
 
         if (response.data.success) {
           setSuccess(true);
-          setAppData({ ...appData, ...data });
-          setIsLoading(false);
-          navigate("/success");
+          setTimeout(() => {
+            setIsLoading(false);
+            navigate("/");
+          }, 2000);
         }
       } catch (error) {
         setIsLoading(false);
-        setError(
-          "Data inicial ou final digitada não corresponde a um dia de aula dessa atividade."
-        );
+        if (
+          error.response.data.error.includes(
+            "Cannot insert the value NULL into column 'IDHORARIOTURMA'"
+          )
+        ) {
+          setError(
+            "Data inicial ou final digitada não corresponde a um dia de aula dessa atividade."
+          );
+        }
+
+        if (error.response.data.error.includes("Chave duplicada")) {
+          setError(
+            "Justificativa realizada anteriormente, procure a coordenação de esporte"
+          );
+        }
       }
     },
-    [makePayload, navigate, appData, setAppData]
+    [appData.activities, makePayload, navigate]
   );
 
   return (

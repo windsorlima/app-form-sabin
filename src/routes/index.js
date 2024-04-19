@@ -5,7 +5,6 @@ import { RequestChoice } from "../pages/RequestChoice";
 import { ExistingFouls } from "../pages/ExistingFouls";
 import { Activities } from "../pages/Activities";
 import { FormPage } from "../pages/FormPage";
-import { SuccessPage } from "../pages/SuccessPage";
 
 export const MyRoutes = () => (
   <Routes>
@@ -15,6 +14,5 @@ export const MyRoutes = () => (
     <Route path="/existingFouls" exact element={<ExistingFouls />} />
     <Route path="/activities" exact element={<Activities />} />
     <Route path="/form" exact element={<FormPage />} />
-    <Route path="/success" exact element={<SuccessPage />} />
   </Routes>
 );
