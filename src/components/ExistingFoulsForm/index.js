@@ -48,7 +48,7 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
 
       const payload = {
         clientId: appData.selectedStudent.id,
-        justification: data.justification,
+        justification: "",
         fileName: fileChangedToBase64 ? data.justificationFile[0].name : "",
         fileBase64: fileChangedToBase64 ? fileChangedToBase64 : "",
       };
@@ -97,11 +97,11 @@ export const ExistingFoulsForm = ({ appData, navigate }) => {
           makeRequest(data);
         })}
       >
-        <JustificationBox>
+        {/* <JustificationBox>
           <label>Justificativa: </label>
           <textarea {...register("justification")} />
           <span>{errors.justification?.message}</span>
-        </JustificationBox>
+        </JustificationBox> */}
 
         <FileBox>
           <label> Anexar atestado: </label>

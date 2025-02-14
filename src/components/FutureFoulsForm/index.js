@@ -51,7 +51,7 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
 
       const payload = {
         clientId: appData.selectedStudent.id,
-        justification: data.justification,
+        justification: "",
         fromDate: data.fromDate,
         toDate: data.toDate,
         fileName: fileChangedToBase64 ? data.justificationFile[0].name : "",
@@ -134,11 +134,11 @@ export const FutureFoulsForm = ({ appData, navigate }) => {
           />
         </DateBox>
 
-        <JustificationBox>
+        {/* <JustificationBox>
           <label>Justificativa: </label>
           <textarea {...register("justification")} />
           <span>{errors.justification?.message}</span>
-        </JustificationBox>
+        </JustificationBox> */}
 
         <FileBox>
           <label> Anexar atestado: </label>

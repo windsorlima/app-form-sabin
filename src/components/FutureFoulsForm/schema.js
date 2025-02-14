@@ -20,7 +20,7 @@ export const futureFoulsSchema = yup.object().shape({
     )
     .required()
     .typeError("A data final é obrigatória"),
-  justification: yup.string().typeError(),
+  // justification: yup.string().typeError(),
   justificationFile: yup
     .mixed()
     .test("required", "O atestado é obrigatório", (value) => {
